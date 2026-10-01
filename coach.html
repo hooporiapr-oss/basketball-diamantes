@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Para el coach · Diamantes de Arecibo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<header><div class="wrap bar"></div></header>
+
+<main>
+  <div class="wrap">
+    <div class="kick">Para el coach</div>
+    <h1>Quién ha estudiado qué.</h1>
+    <p class="lede">Se actualiza solo. Cada jugador aparece cuando se registra, y las lecciones
+      se marcan cuando las completa.</p>
+    <div id="out"><p class="mute">Cargando…</p></div>
+  </div>
+</main>
+
+<footer>
+  <b>Diamantes de Arecibo</b>
+  Conceptos de Rouldan A. Vélez
+</footer>
+
+<script src="dia.js"></script>
+<script src="lessons.js"></script>
+<script>
+chrome({ title:'Coach' });
+
+var out = document.getElementById('out');
+
+Promise.all([
+  api('dia_players?select=id,name,team&order=name.asc'),
+  api('dia_progress?select=player_id,lesson'),
+  api('dia_quiz?select=player_id,set_key,correct,total,taken_at&order=taken_at.desc')
+])
+.then(function(res){
+  var players = res[0] || [], progress = res[1] || [], quizzes = res[2] || [];
+
+  if (!players.length){
+    out.innerHTML = '<p class="mute">Todavía no se ha registrado nadie. ' +
+      'Comparte el enlace con el equipo.</p>';
+    return;
+  }
+
+  var doneBy = {};
+  progress.forEach(function(r){
+    (doneBy[r.player_id] = doneBy[r.player_id] || {})[r.lesson] = 1;
+  });
+
+  // the best score each player has posted, which is what a coach asks
+  var bestBy = {};
+  quizzes.forEach(function(q){
+    var pct = Math.round(q.correct / Math.max(1, q.total) * 100);
+    if (!bestBy[q.player_id] || pct > bestBy[q.player_id]) bestBy[q.player_id] = pct;
+  });
+
+  var total = LESSONS.length;
+
+  var rows = players.map(function(p){
+    var done = Object.keys(doneBy[p.id] || {}).length;
+    var best = bestBy[p.id];
+    return '<tr>' +
+      '<td><b>' + esc(p.name) + '</b>' + (p.team ? '<br><span class="mute" style="font-size:.84rem">' + esc(p.team) + '</span>' : '') + '</td>' +
+      '<td>' + done + ' / ' + total + '</td>' +
+      '<td>' + (best === undefined ? '<span class="mute">—</span>' : best + '%') + '</td>' +
+    '</tr>';
+  }).join('');
+
+  // which lessons the team as a whole has not done
+  var perLesson = LESSONS.map(function(l){
+    var n = players.filter(function(p){ return (doneBy[p.id] || {})[l.id]; }).length;
+    return { name: l.name, n: n };
+  }).sort(function(a, b){ return a.n - b.n; });
+
+  out.innerHTML =
+    '<table><tr><th>Jugador</th><th>Lecciones</th><th>Mejor nota</th></tr>' + rows + '</table>' +
+
+    '<h2>Por lección</h2>' +
+    '<table><tr><th>Lección</th><th>Lo estudiaron</th></tr>' +
+      perLesson.map(function(l){
+        return '<tr><td>' + l.name + '</td><td>' + l.n + ' / ' + players.length + '</td></tr>';
+      }).join('') +
+    '</table>' +
+
+    '<h2>Últimas pruebas</h2>' +
+    (quizzes.length
+      ? '<table><tr><th>Jugador</th><th>Grupo</th><th>Nota</th></tr>' +
+          quizzes.slice(0, 15).map(function(q){
+            var who = players.filter(function(p){ return p.id === q.player_id; })[0];
+            return '<tr><td>' + esc(who ? who.name : '—') + '</td><td>' + esc(q.set_key) + '</td>' +
+                   '<td>' + q.correct + ' / ' + q.total + '</td></tr>';
+          }).join('') +
+        '</table>'
+      : '<p class="mute">Todavía nadie ha hecho las preguntas.</p>');
+})
+.catch(function(e){
+  console.error(e);
+  out.innerHTML = '<p class="mute">No se pudieron cargar los datos.</p>';
+});
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(m){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m];
+  });
+}
+</script>
+</body>
+</html>
