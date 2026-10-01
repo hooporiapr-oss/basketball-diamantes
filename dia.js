@@ -6,7 +6,7 @@
 //  so the page never reads the roster or a PIN directly.
 // ══════════════════════════════════════════════════════
 var SB_URL = 'https://sdaphocueugzfvjovuxd.supabase.co';
-var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkYXBob2N1ZXVnemZ2am92dXhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3NDQ4MDUsImV4cCI6MjA3MjMyMDgwNX0.ZT-I5ta5QhNrhZ1_JEHzwOXQJjP1LbHjm3VPRIEnNfs';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNkYXBob2N1ZXVnemZ2am92dXhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MjQyMDgsImV4cCI6MjA5OTIwMDIwOH0.pDAzf4P6dD9eNEBlnP95SdF5BI-R84-Rdc0vKzYcn7M';
 
 function api(path, body){
   return fetch(SB_URL + '/rest/v1/' + path, {
