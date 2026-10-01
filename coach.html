@@ -8,6 +8,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<style>
+.mini{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:3px;
+  padding:5px 9px;font:inherit;font-size:.74rem;font-weight:800;cursor:pointer}
+.mini:hover{border-color:var(--ink)}
+.mini.bad{color:var(--bad);border-color:rgba(168,50,63,.35)}
+.mini.bad:hover{border-color:var(--bad)}
+</style>
 </head>
 <body>
 
@@ -34,6 +41,70 @@
 <script>
 chrome({ title:'Coach' });
 
+// El código se guarda solo mientras la pestaña esté abierta.
+function coachCode(){
+  try { return sessionStorage.getItem('dia-coach') || ''; } catch(e){ return ''; }
+}
+function setCoachCode(c){
+  try { sessionStorage.setItem('dia-coach', c); } catch(e){}
+}
+
+function askCode(){
+  var c = prompt('Código del coach:');
+  if (c === null) return null;
+  setCoachCode(c);
+  return c;
+}
+
+// Every action sends the code; the database decides whether it counts.
+function coachCall(fn, args){
+  var c = coachCode() || askCode();
+  if (!c) return Promise.resolve(null);
+  args.p_code = c;
+  return rpc(fn, args).then(function(r){
+    if (r && r.ok === false && r.reason === 'code'){
+      try { sessionStorage.removeItem('dia-coach'); } catch(e){}
+      alert('Código incorrecto.');
+      return null;
+    }
+    return r;
+  });
+}
+
+function addPlayer(){
+  var name = prompt('Nombre del jugador:');
+  if (!name) return;
+  var team = prompt('Equipo o categoría (opcional):') || '';
+  var pin  = prompt('PIN de 4 números (opcional — lo puede poner él después):') || '';
+
+  coachCall('dia_coach_add', { p_name: name, p_team: team, p_pin: pin })
+    .then(function(r){
+      if (!r) return;
+      if (!r.ok){
+        alert(r.reason === 'exists' ? 'Ese nombre ya está registrado.' : 'No se pudo añadir.');
+        return;
+      }
+      location.reload();
+    })
+    .catch(function(e){ console.error(e); alert('No se pudo añadir.'); });
+}
+
+function removePlayer(id, name){
+  if (!confirm('¿Borrar a ' + name + '? Se pierde su progreso y sus notas.')) return;
+  coachCall('dia_coach_remove', { p_player: id })
+    .then(function(r){ if (r && r.ok) location.reload(); })
+    .catch(function(e){ console.error(e); alert('No se pudo borrar.'); });
+}
+
+function resetPin(id, name){
+  var pin = prompt('PIN nuevo para ' + name + ' (4 números):');
+  if (pin === null) return;
+  if (pin && !/^\d{4}$/.test(pin)) return alert('El PIN son 4 números.');
+  coachCall('dia_coach_pin', { p_player: id, p_pin: pin })
+    .then(function(r){ if (r && r.ok) alert('PIN cambiado.'); })
+    .catch(function(e){ console.error(e); alert('No se pudo cambiar.'); });
+}
+
 var out = document.getElementById('out');
 
 Promise.all([
@@ -46,7 +117,8 @@ Promise.all([
 
   if (!players.length){
     out.innerHTML = '<p class="mute">Todavía no se ha registrado nadie. ' +
-      'Comparte el enlace con el equipo.</p>';
+      'Comparte el enlace con el equipo.</p>' +
+      '<button class="btn" onclick="addPlayer()">+ Añadir jugador</button>';
     return;
   }
 
@@ -83,6 +155,10 @@ Promise.all([
       '<td>' + (certs.length
                  ? '<span style="color:var(--good);font-weight:800">' + certs.join(' · ') + '</span>'
                  : '<span class="mute">—</span>') + '</td>' +
+      '<td style="white-space:nowrap">' +
+        '<button class="mini" onclick="resetPin(\'' + p.id + '\',\'' + esc(p.name).replace(/'/g,"\\'") + '\')">PIN</button> ' +
+        '<button class="mini bad" onclick="removePlayer(\'' + p.id + '\',\'' + esc(p.name).replace(/'/g,"\\'") + '\')">Borrar</button>' +
+      '</td>' +
     '</tr>';
   }).join('');
 
@@ -93,7 +169,9 @@ Promise.all([
   }).sort(function(a, b){ return a.n - b.n; });
 
   out.innerHTML =
-    '<table><tr><th>Jugador</th><th>Lecciones</th><th>Mejor nota</th><th>Certificados</th></tr>' + rows + '</table>' +
+    '<button class="btn" onclick="addPlayer()">+ Añadir jugador</button>' +
+    '<table><tr><th>Jugador</th><th>Lecciones</th><th>Mejor nota</th><th>Certificados</th><th></th></tr>' +
+      rows + '</table>' +
 
     '<h2>Por lección</h2>' +
     '<table><tr><th>Lección</th><th>Lo estudiaron</th></tr>' +
