@@ -49,16 +49,16 @@ function chrome(opts){
   var head = document.querySelector('header .bar');
   if (head){
     head.innerHTML =
-      '<a class="mark" href="index.html"><span>Diamantes de Arecibo</span>' +
+      '<a class="mark" href="' + (p ? 'academia.html' : 'index.html') + '"><span>Diamantes de Arecibo</span>' +
         (opts.title || 'Academia') + '</a>' +
       '<div class="who">' +
         (p ? p.name + ' · <a href="#" onclick="signOut();return false;">Salir</a>'
-           : '<a href="entrar.html">Entrar</a>') +
+           : '<a href="index.html">Entrar</a>') +
       '</div>';
   }
 
   if (opts.needPlayer && !p){
-    location.href = 'entrar.html?next=' + encodeURIComponent(location.pathname.split('/').pop());
+    location.href = 'index.html?next=' + encodeURIComponent(location.pathname.split('/').pop());
     return null;
   }
   return p;
