@@ -327,7 +327,7 @@ function start(){
       'te explico por qué, con el lenguaje del equipo.</p>' +
     (me() ? '' : '<p class="mute" style="font-size:.9rem;margin:-10px 0 16px">' +
       'No has entrado, así que el resultado no se guarda. ' +
-      '<a href="entrar.html?next=quiz.html">Entrar</a></p>') +
+      '<a href="index.html?next=quiz.html">Entrar</a></p>') +
     '<div class="pick">' +
       Object.keys(SETS).map(function(k){
         var n = SETS[k].pick().length;
@@ -434,7 +434,7 @@ function finish(){
           ? '<a class="btn" href="certificado.html?s=' + encodeURIComponent(CURRENT_SET) +
               '&c=' + right + '&t=' + quiz.length + '">Ver mi certificado</a>'
           : '<p class="mute" style="text-align:center">Aprobaste. ' +
-            '<a href="entrar.html?next=quiz.html">Entra</a> para quedarte con el certificado.</p>')
+            '<a href="index.html?next=quiz.html">Entra</a> para quedarte con el certificado.</p>')
       : '') +
     (wrong.length
       ? '<div class="review"><h3>Para repasar</h3>' +
