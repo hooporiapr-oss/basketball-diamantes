@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Certificado · Diamantes de Arecibo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* El certificado: pensado para verse en pantalla y para imprimir. */
+.cert{
+  border:3px solid var(--ink);border-radius:6px;padding:clamp(22px,5vw,40px);
+  text-align:center;background:#fff;position:relative;margin:6px 0 16px;
+}
+.cert::after{
+  content:'';position:absolute;inset:9px;border:1px solid var(--gold);border-radius:3px;
+  pointer-events:none;
+}
+.cert .crest{font-size:.6rem;font-weight:900;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px}
+.cert .what{font-size:.7rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:6px}
+.cert .who{font-size:clamp(1.6rem,6vw,2.6rem);font-weight:900;letter-spacing:-.03em;
+  line-height:1.1;margin:0 0 4px}
+.cert .rule{width:70px;height:3px;background:var(--gold);margin:14px auto}
+.cert .set{font-size:clamp(1.05rem,3.2vw,1.3rem);font-weight:800;margin-bottom:4px}
+.cert .score{font-size:.95rem;color:var(--mute)}
+.cert .feet{display:flex;justify-content:space-between;gap:14px;margin-top:26px;
+  font-size:.74rem;color:var(--mute);text-align:left;flex-wrap:wrap}
+.cert .feet b{display:block;color:var(--ink);font-size:.82rem}
+@media print{
+  html,body{height:auto;overflow:visible;background:#fff}
+  header,footer,.noprint{display:none!important}
+  main{overflow:visible}
+  main .wrap{padding:0}
+  .cert{border-color:#000}
+}
+</style>
+</head>
+<body>
+
+<header><div class="wrap bar"></div></header>
+
+<main>
+  <div class="wrap" id="app"></div>
+</main>
+
+<footer>
+  <b>Diamantes de Arecibo</b>
+  Conceptos de Rouldan A. Vélez
+</footer>
+
+<script src="dia.js"></script>
+<script>
+chrome({ title:'Certificado' });
+
+var SET_NAMES = {
+  all:   'Conceptos del Pick & Roll — completo',
+  def:   'Defensa del Pick & Roll',
+  off:   'Conceptos ofensivos',
+  quick: 'Repaso rápido'
+};
+
+var q = new URLSearchParams(location.search);
+var setKey = q.get('s') || 'all';
+var correct = parseInt(q.get('c'), 10);
+var total = parseInt(q.get('t'), 10);
+var p = me();
+var app = document.getElementById('app');
+
+var pct = (total > 0) ? Math.round(correct / total * 100) : 0;
+
+if (!p){
+  app.innerHTML = '<h1>Entra primero</h1>' +
+    '<p class="lede">El certificado lleva tu nombre, así que hay que saber quién eres.</p>' +
+    '<a class="btn" href="entrar.html?next=quiz.html">Entrar</a>';
+} else if (!(total > 0) || pct < 80){
+  app.innerHTML = '<h1>Todavía no</h1>' +
+    '<p class="lede">El certificado se gana con 80% o más en un grupo de preguntas.</p>' +
+    '<a class="btn" href="quiz.html">Hacer las preguntas</a>';
+} else {
+  var hoy = new Date().toLocaleDateString('es-PR', { day:'numeric', month:'long', year:'numeric' });
+
+  app.innerHTML =
+    '<div class="cert">' +
+      '<div class="crest">Diamantes de Arecibo</div>' +
+      '<div class="what">Certificado de dominio</div>' +
+      '<h1 class="who">' + esc(p.name) + '</h1>' +
+      '<div class="rule"></div>' +
+      '<div class="set">' + (SET_NAMES[setKey] || setKey) + '</div>' +
+      '<div class="score">' + correct + ' de ' + total + ' · ' + pct + '%</div>' +
+      '<div class="feet">' +
+        '<div><b>' + hoy + '</b>Fecha</div>' +
+        '<div style="text-align:right"><b>Rouldan A. Vélez</b>Conceptos del equipo</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="noprint">' +
+      '<button class="btn" onclick="window.print()">Imprimir o guardar en PDF</button>' +
+      '<a class="btn line" href="quiz.html">Otro grupo de preguntas</a>' +
+      '<a class="btn line" href="index.html">← Academia</a>' +
+    '</div>';
+}
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(m){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m];
+  });
+}
+</script>
+</body>
+</html>
