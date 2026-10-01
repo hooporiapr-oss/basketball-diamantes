@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Academia Diamantes de Arecibo</title>
+<meta name="description" content="Los conceptos del equipo, para estudiar y practicar: coberturas del Pick & Roll, conceptos ofensivos y el diccionario.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<header><div class="wrap bar"></div></header>
+
+<main>
+  <div class="wrap">
+    <div class="kick">Academia</div>
+    <h1>El lenguaje del equipo.</h1>
+    <p class="lede">Las coberturas del Pick &amp; Roll, los conceptos ofensivos y el diccionario —
+      para estudiar antes de la práctica y repasar después. Entra con tu nombre y se guarda lo que
+      vas completando.</p>
+
+    <div id="hello"></div>
+
+    <h2>Defensa del Pick &amp; Roll</h2>
+    <div class="grid" id="def"></div>
+
+    <h2>Ataque</h2>
+    <div class="grid" id="off"></div>
+
+    <h2>Ponte a prueba</h2>
+    <a class="card" href="quiz.html">
+      <b>Preguntas</b>
+      <span>32 preguntas con explicación, en el lenguaje del equipo</span>
+    </a>
+    <a class="card" href="coach.html">
+      <b>Para el coach</b>
+      <span>Quién ha estudiado qué, y los resultados del equipo</span>
+    </a>
+  </div>
+</main>
+
+<footer>
+  <b>Diamantes de Arecibo</b>
+  Conceptos de Rouldan A. Vélez
+</footer>
+
+<script src="dia.js"></script>
+<script src="lessons.js"></script>
+<script>
+var p = chrome({ title:'Academia' });
+var done = seenLocally();
+
+document.getElementById('hello').innerHTML = p
+  ? ''
+  : '<a class="btn" href="entrar.html">Entrar para guardar tu progreso</a>';
+
+function cardFor(l){
+  return '<a class="card" href="leccion.html?l=' + l.id + '">' +
+           '<b>' + l.name + (done[l.id] ? ' <span class="done">✓</span>' : '') + '</b>' +
+           '<span>' + (l.sub || l.blurb) + '</span>' +
+         '</a>';
+}
+
+document.getElementById('def').innerHTML =
+  LESSONS.filter(function(l){ return l.side === 'DEF'; }).map(cardFor).join('');
+document.getElementById('off').innerHTML =
+  LESSONS.filter(function(l){ return l.side === 'OFF'; }).map(cardFor).join('');
+</script>
+</body>
+</html>
