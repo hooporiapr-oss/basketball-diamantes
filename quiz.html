@@ -3,101 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Diamantes de Arecibo · Pick &amp; Roll</title>
+<title>Lección · Diamantes de Arecibo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--ink:#0B1B33;--mute:#6B7C91;--line:#D3DEEA;--tint:#F4F8FC;
-      --blue:#1D4FA3;--gold:#C5A54A;--good:#0B7A5A;--bad:#A8323F}
-*{box-sizing:border-box}
-html{background:#0B1B33}
-body{margin:0;height:100dvh;overflow:hidden;display:flex;flex-direction:column;
-  font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--ink);
-  background:#FFFFFF;line-height:1.55;-webkit-text-size-adjust:100%}
-.wrap{width:min(720px,93vw);margin:0 auto}
-
-header{flex:0 0 auto;background:#0B1B33;border-bottom:3px solid var(--gold);
-  padding-top:env(safe-area-inset-top,0px)}
-header .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
-header .mark{font-weight:900;font-size:1.02rem;color:#fff;letter-spacing:.02em;line-height:1.15}
-header .mark span{display:block;font-size:.6rem;font-weight:800;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--gold)}
-header .count{font-size:.72rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
-  color:#9FB3C4;text-align:right;white-space:nowrap}
-.progress{height:4px;background:#13294d}
-.progress i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
-
-main{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden}
-main .wrap{padding:clamp(18px,4vw,30px) 0 26px}
-
-/* ---- start ---- */
-h1{font-size:clamp(1.5rem,4.6vw,2.1rem);line-height:1.1;letter-spacing:-.03em;margin:0 0 8px;font-weight:900}
-.lede{color:var(--mute);margin:0 0 20px}
-.pick{display:grid;gap:10px;margin-bottom:8px}
-.pick button{
-  text-align:left;padding:15px 16px;border:2px solid var(--ink);border-radius:4px;background:#fff;
-  font:inherit;cursor:pointer;color:var(--ink);
-}
-.pick button b{display:block;font-size:1.02rem}
-.pick button span{display:block;color:var(--mute);font-size:.88rem;margin-top:2px}
-.pick button:hover{background:var(--tint)}
-
-/* ---- question ---- */
-.tagrow{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
-.tag{font-size:.62rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
-  padding:4px 9px;border-radius:3px;background:var(--ink);color:#fff}
-.tag.off{background:var(--blue)}
-.q{font-size:clamp(1.1rem,3.2vw,1.42rem);font-weight:800;letter-spacing:-.02em;margin:0 0 16px;line-height:1.3}
-.opts{display:grid;gap:9px}
-.opt{
-  display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;
-  padding:14px 15px;border:2px solid var(--line);border-radius:4px;background:#fff;
-  font:inherit;font-size:1rem;cursor:pointer;color:var(--ink);
-}
-.opt:hover:not(:disabled){border-color:var(--ink)}
-.opt .k{flex:0 0 24px;height:24px;border-radius:50%;background:var(--tint);border:1.5px solid var(--line);
-  font-size:.76rem;font-weight:900;display:grid;place-content:center;color:var(--mute)}
-.opt.right{border-color:var(--good);background:rgba(11,122,90,.07)}
-.opt.right .k{background:var(--good);border-color:var(--good);color:#fff}
-.opt.wrong{border-color:var(--bad);background:rgba(168,50,63,.06)}
-.opt.wrong .k{background:var(--bad);border-color:var(--bad);color:#fff}
-.opt:disabled{cursor:default}
-
-.why{margin-top:16px;border-left:4px solid var(--gold);background:var(--tint);padding:14px 16px}
-.why b{display:block;margin-bottom:4px}
-.why p{margin:0;font-size:.95rem}
-
-.next{display:block;width:100%;margin-top:16px;padding:16px;border:2px solid var(--ink);
-  border-radius:4px;background:var(--ink);color:#fff;font:inherit;font-weight:800;
-  font-size:1.02rem;cursor:pointer}
-
-/* ---- score ---- */
-.final{text-align:center;padding:14px 0}
-.final .big{font-size:clamp(3rem,13vw,5rem);font-weight:900;line-height:1;letter-spacing:-.04em}
-.final .of{color:var(--mute);font-size:.8rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
-.final .verdict{font-size:1.15rem;font-weight:800;margin:12px 0 6px}
-.review{margin-top:18px;text-align:left}
-.review h3{font-size:.68rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--mute);margin:0 0 8px}
-.review div{padding:10px 0;border-bottom:1px solid var(--line);font-size:.93rem}
-.review div:last-child{border-bottom:none}
-.review .t{font-weight:800}
-
-footer{flex:0 0 auto;background:#0B1B33;color:#9FB3C4;border-top:1px solid #13294d;
-  padding:14px 0 calc(14px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.8rem}
-footer b{color:#fff;display:block;font-weight:800}
-</style>
+<link rel="stylesheet" href="shared.css">
 </head>
 <body>
 
-<header>
-  <div class="wrap bar">
-    <div class="mark"><span>Diamantes de Arecibo</span>Pick &amp; Roll</div>
-    <div class="count" id="count"></div>
-  </div>
-  <div class="progress"><i id="bar"></i></div>
-</header>
+<header><div class="wrap bar"></div></header>
 
 <main>
   <div class="wrap" id="app"></div>
@@ -108,367 +22,83 @@ footer b{color:#fff;display:block;font-weight:800}
   Conceptos de Rouldan A. Vélez
 </footer>
 
+<script src="dia.js"></script>
+<script src="lessons.js"></script>
 <script>
-// ══════════════════════════════════════════════════════
-//  Las preguntas salen de los dos manuales del equipo:
-//  Conceptos Defensivos del Pick and Roll y el Manual de
-//  Conceptos Ofensivos. Las explicaciones usan las mismas
-//  palabras que el coach, para que el lenguaje sea uno solo.
-// ══════════════════════════════════════════════════════
-var BANK = [
-  // ---------- defensa ----------
-  { side:'DEF', tag:'ICE',
-    q:'En ICE, ¿hacia dónde queremos mandar el balón?',
-    o:['Hacia el centro de la cancha','Hacia la línea de fondo','Hacia la esquina débil','Hacia el codo'],
-    a:1,
-    why:'ICE niega la pantalla y obliga al manejador hacia baseline. La idea clave es NO MIDDLE → NO SCREEN → BASELINE, y no se le permite regresar al centro.' },
+chrome({ title:'Lección' });
 
-  { side:'DEF', tag:'ICE',
-    q:'¿Cuándo se grita "ICE"?',
-    o:['Cuando el manejador ya usó la pantalla','Antes de que llegue la pantalla','Después del roll','Solo si hay cambio'],
-    a:1,
-    why:'La comunicación es temprana: "ICE! ICE! ICE!" antes de que llegue la pantalla. Avisar tarde es lo mismo que no avisar.' },
-
-  { side:'DEF', tag:'HEDGE',
-    q:'En HEDGE, ¿quién contiene y quién recupera?',
-    o:['El defensor del balón contiene; el del screener recupera',
-       'El defensor del screener contiene un momento; el del balón recupera al manejador',
-       'Los dos cambian de hombre','El lado débil contiene'],
-    a:1,
-    why:'El defensor del screener sale, muestra el cuerpo y contiene por un momento, y luego recupera a su hombre. El defensor del balón pelea por encima de la pantalla y recupera rápido al manejador.' },
-
-  { side:'DEF', tag:'HEDGE',
-    q:'¿Qué NO queremos que pase en un hedge?',
-    o:['Que se convierta en un cambio accidental','Que el big muestre el cuerpo',
-       'Que el guard pelee por encima','Que el lado débil rote'],
-    a:0,
-    why:'El hedge no es un switch. Si el big se queda con el manejador y el guard se queda con el screener sin haberlo llamado, la defensa terminó cambiando sin querer.' },
-
-  { side:'DEF', tag:'BUMP / TAG',
-    q:'¿Quién retrasa al roller y cuándo debe recuperar?',
-    o:['El defensor del balón, al terminar la posesión',
-       'El defensor de ayuda, y recupera rápido a su jugador, sobre todo si es tirador',
-       'El big del lado fuerte, y no recupera','Nadie: se deja correr el roll'],
-    a:1,
-    why:'El BUMP es una responsabilidad de ayuda: el defensor de ayuda entra en la trayectoria del roller y hace contacto legal para darle tiempo al defensor del screener. Después recupera rápido, especialmente si su hombre es tirador.' },
-
-  { side:'DEF', tag:'BUMP / TAG',
-    q:'¿Cuál es la idea clave del Bump/Tag?',
-    o:['Ayudar al roll sin regalar un triple abierto','Cambiar siempre',
-       'Mandar el balón al centro','Doblar al manejador con dos defensores'],
-    a:0,
-    why:'Ayudar al roll sin regalar un triple abierto. Por eso el resto de la defensa debe rotar para cubrir la ayuda.' },
-
-  { side:'DEF', tag:'SWITCH',
-    q:'Después de un SWITCH, ¿qué hay que reconocer de inmediato?',
-    o:['El reloj de posesión','Los mismatches, para negar el pase interior',
-       'Quién tiene más faltas','La posición del entrenador'],
-    a:1,
-    why:'Tras el cambio hay que reconocer mismatches, negar el pase interior y preparar ayudas si hay ventaja de tamaño.' },
-
-  { side:'DEF', tag:'DROP',
-    q:'En DROP, ¿qué debemos proteger primero?',
-    o:['La línea de tres','La pintura y el aro','La esquina','El pase al poste'],
-    a:1,
-    why:'El defensor del screener permanece por debajo de la pantalla protegiendo pintura y aro. El objetivo es quitar penetración y roll al aro, aceptando ciertos tiros de media distancia según el scouting.' },
-
-  { side:'DEF', tag:'DROP',
-    q:'En DROP, ¿qué hace el defensor del balón?',
-    o:['Se queda por debajo de la pantalla','Cambia con el big',
-       'Pelea por encima y recupera por detrás del manejador','Se va al lado débil'],
-    a:2,
-    why:'El defensor del balón pelea por encima de la pantalla y trata de recuperar por detrás del manejador, mientras el big contiene manteniéndose entre balón y aro.' },
-
-  { side:'DEF', tag:'SNAKE',
-    q:'¿Qué intenta conseguir el manejador cuando hace Snake?',
-    o:['Salir hacia baseline','Cruzar al centro, poner al defensor detrás y atacar pintura o media distancia',
-       'Provocar una falta','Esperar el re-screen'],
-    a:1,
-    why:'El Snake ocurre cuando el manejador usa la pantalla y cruza nuevamente hacia el centro, tratando de colocar al defensor detrás y atacar la pintura o el tiro de media distancia.' },
-
-  { side:'DEF', tag:'SNAKE',
-    q:'¿Cómo debe recuperar el defensor del balón ante un Snake?',
-    o:['Directamente por detrás del manejador','Buscando colocarse al lado del manejador',
-       'Esperando en la pintura','Cambiando con el big'],
-    a:1,
-    why:'Pelea la pantalla y recupera buscando colocarse al lado del manejador, no directamente detrás, para dificultar el cambio de dirección hacia el centro.' },
-
-  { side:'DEF', tag:'SNAKE',
-    q:'¿Qué cobertura puede prevenir el Snake en un Side Pick & Roll?',
-    o:['DROP','SWITCH','ICE','HEDGE'],
-    a:2,
-    why:'ICE previene el Snake al negar la pantalla y mantener el balón fuera del centro.' },
-
-  { side:'DEF', tag:'SNAKE',
-    q:'En el orden de recuperación tras un Snake, ¿a quién recupera el que hizo Bump/Tag?',
-    o:['Al manejador','Al roller','Al tirador','Al poste'],
-    a:2,
-    why:'El concepto clave es SNAKE → BIG CONTIENE → BUMP/TAG AL ROLL → GUARD RECUPERA → BIG RECUPERA → AYUDA RECUPERA AL TIRADOR.' },
-
-  { side:'DEF', tag:'PRINCIPIOS',
-    q:'¿Qué tienen en común todas las coberturas?',
-    o:['Comunicación, ayuda, recuperación y rebote','Cambiar siempre',
-       'Doblar el balón','Negar la primera línea de pase'],
-    a:0,
-    why:'Son los principios comunes: comunicar temprano, defender como cinco, proteger primero aro y pintura, ver balón y hombre desde el lado débil, y terminar la posesión con BOX OUT + REBOUND.' },
-
-  { side:'DEF', tag:'PRINCIPIOS',
-    q:'¿Cómo se termina toda posesión defensiva?',
-    o:['Con una falta táctica','Con BOX OUT + REBOUND','Corriendo al ataque','Pidiendo cambio'],
-    a:1,
-    why:'La posesión no termina con un buen contest: termina con BOX OUT + REBOUND.' },
-
-  // ---------- ataque ----------
-  { side:'OFF', tag:'VENTAJA',
-    q:'¿Qué significa crear una ventaja?',
-    o:['Anotar el primer tiro disponible',
-       'Obligar a la defensa a reaccionar: penetración, pantalla, corte, transición, post-up o ataque de closeout',
-       'Agotar el reloj','Driblar hasta encontrar espacio'],
-    a:1,
-    why:'Crear ventaja es el primer principio ofensivo, y se consigue con penetración, pantalla, corte, transición, post-up o ataque de closeout.' },
-
-  { side:'OFF', tag:'VENTAJA',
-    q:'¿Cómo mantenemos la ventaja una vez creada?',
-    o:['Spacing, movimiento, pase, corte y Extra Pass','Driblando más',
-       'Esperando al big','Sacando el balón para empezar de nuevo'],
-    a:0,
-    why:'Mantener la ventaja: Pass, Extra Pass, Cut, Replace, Lift, Drift o Relocate. La secuencia completa es CREAR VENTAJA → LEER LA AYUDA → MANTENER LA VENTAJA → ENCONTRAR EL MEJOR TIRO.' },
-
-  { side:'OFF', tag:'CONTRA ICE',
-    q:'La defensa juega ICE. ¿Cuál es el principio ofensivo?',
-    o:['Forzar la pantalla negada','Atacar el espacio que ICE concede',
-       'Sacar el balón y reiniciar','Pedir un cambio'],
-    a:1,
-    why:'No forzar la pantalla negada; atacar el espacio que ICE concede. Las lecturas son Reject, cambiar el ángulo de la pantalla, Re-Screen, Flip Screen, o que el screener haga Slip antes del contacto.' },
-
-  { side:'OFF', tag:'CONTRA HEDGE',
-    q:'Dos defensores salen al balón en un Hedge. ¿Qué significa eso?',
-    o:['Que hay que parar el balón','Que existe ventaja detrás de ellos',
-       'Que hay que cambiar de lado','Que el tiro de tres está cerrado'],
-    a:1,
-    why:'Dos defensores sobre el balón significa que existe ventaja detrás de ellos. Se busca Pocket Pass, pase sobre el hedge o salida hacia el lado débil, y el lado débil castiga las rotaciones con Extra Pass.' },
-
-  { side:'OFF', tag:'CONTRA DROP',
-    q:'¿Cómo atacamos un DROP?',
-    o:['Poner al defensor del balón detrás y hacer que el big defienda dos jugadores',
-       'Sacar el balón al lado débil de inmediato','Entrar al poste siempre','Esperar el cambio'],
-    a:0,
-    why:'Usar pantalla hombro con hombro, mantener al defensor del balón detrás, y leer Pull-up, floater, Snake, Pocket Pass o lob/roll según la posición del big.' },
-
-  { side:'OFF', tag:'CONTRA SWITCH',
-    q:'¿Qué ventaja buscamos después de un Switch?',
-    o:['Ninguna: el switch la elimina','El mismatch — guard contra big con espacio, o big contra guard con Seal/Post-up',
-       'El tiro rápido de tres','Driblar el reloj'],
-    a:1,
-    why:'El principio es que Switch no elimina la ventaja: cambia el tipo de ventaja. Hay que identificar rápido dónde está, sin driblar sin propósito.' },
-
-  { side:'OFF', tag:'CONTRA BUMP',
-    q:'Cuando el lado débil hace Bump/Tag al roller, ¿a quién debemos leer?',
-    o:['Al big que contiene','Al tirador que queda momentáneamente libre',
-       'Al manejador','Al defensor de baseline'],
-    a:1,
-    why:'Cuando llega el Tag, alguien del perímetro queda momentáneamente disponible. Se castiga con Skip Pass o Extra Pass, y el tirador puede Lift o Relocate para mejorar el ángulo.' },
-
-  { side:'OFF', tag:'LECTURAS',
-    q:'¿Cuándo es excelente el Slip?',
-    o:['Contra Drop profundo','Contra Switch, Hedge o defensores que se adelantan',
-       'Contra ICE únicamente','Al final del reloj'],
-    a:1,
-    why:'Slip es cortar al aro antes de completar la pantalla, y castiga precisamente al switch, al hedge o a la anticipación.' },
-
-  { side:'OFF', tag:'LECTURAS',
-    q:'¿Qué es el Pocket Pass?',
-    o:['Un pase largo al lado débil','Un pase corto al screener en el espacio entre los dos defensores',
-       'Una entrega mano a mano','Un pase por encima del aro'],
-    a:1,
-    why:'Pase corto al screener en el espacio entre los dos defensores. Requiere timing y ángulo.' },
-
-  { side:'OFF', tag:'LECTURAS',
-    q:'¿Para qué sirve el Re-Screen?',
-    o:['Para agotar el reloj','Para atacar otra vez cambiando el ángulo cuando la primera cobertura neutralizó la acción',
-       'Para provocar una falta','Para cambiar de lado la defensa'],
-    a:1,
-    why:'Segunda pantalla al balón, muchas veces cambiando el ángulo, cuando la primera cobertura detuvo la acción.' },
-
-  { side:'OFF', tag:'LECTURAS',
-    q:'¿Qué busca el Ghost Screen?',
-    o:['Hacer contacto fuerte en la pantalla','Amenazar la pantalla y abrirse sin contacto para confundir la cobertura',
-       'Sellar al defensor','Entrar al poste'],
-    a:1,
-    why:'Simular la pantalla y abrirse rápidamente. Puede crear confusión, un switch innecesario o un tiro abierto.' },
-
-  { side:'OFF', tag:'TRANSICIÓN',
-    q:'En transición, ¿qué hace el primer grande?',
-    o:['Trailer','Rim Run — correr directo al aro','Abrir a la esquina','Pedir el balón en el codo'],
-    a:1,
-    why:'Rebote → Outlet → Push. El PG empuja, los wings corren Wide Lanes, el primer grande hace Rim Run y el segundo es Trailer.' },
-
-  { side:'OFF', tag:'TRANSICIÓN',
-    q:'¿Qué hacemos si no conseguimos ventaja en la transición primaria?',
-    o:['Sacar el balón y empezar desde cero','Entrar directamente al Secondary Break',
-       'Buscar falta','Bajar el ritmo y esperar'],
-    a:1,
-    why:'Si no hay canasto inmediato se entra directo al Secondary Break, usando Drag Screen, Ball Reversal, Post Entry o Attack the Closeout sin detener el ritmo. No se saca el balón para empezar de cero si todavía existe una ventaja.' },
-
-  { side:'OFF', tag:'DICCIONARIO',
-    q:'¿Qué es un Paint Touch y para qué sirve?',
-    o:['Tocar la pintura con el pie para reiniciar','Que el balón llegue a la pintura por penetración, pase o post-up, para obligar a la defensa a colapsar',
-       'Un pase al codo','Una pantalla en la pintura'],
-    a:1,
-    why:'Paint Touch obliga a la defensa a colapsar y genera las ventajas que después se castigan con pase y Extra Pass.' },
-
-  { side:'OFF', tag:'DICCIONARIO',
-    q:'¿Cuál es la diferencia entre Drive & Kick y Extra Pass?',
-    o:['Son lo mismo','Drive & Kick saca el balón cuando llega la ayuda; Extra Pass convierte un buen tiro en uno excelente',
-       'Extra Pass es sólo en transición','Drive & Kick es un pase al poste'],
-    a:1,
-    why:'Drive & Kick colapsa la defensa y crea tiros abiertos. El Extra Pass es el pase siguiente: de un jugador abierto a otro con una ventaja todavía mayor.' },
-
-  { side:'OFF', tag:'DICCIONARIO',
-    q:'¿Qué hace un jugador de esquina en un Baseline Drift?',
-    o:['Sube hacia el wing','Se desplaza por baseline durante una penetración para crear línea de pase detrás de la ayuda',
-       'Corta al aro','Pone una pantalla al balón'],
-    a:1,
-    why:'Baseline Drift crea una línea de pase detrás de la ayuda. Si en cambio sube hacia el wing, eso es Lift — mejora el ángulo y la línea de pase.' },
-
-  { side:'OFF', tag:'DICCIONARIO',
-    q:'¿Qué es el Short Roll y qué debe leer el receptor?',
-    o:['Rodar hasta la esquina y tirar','Recibir entre la línea de tres y el aro, y leer aro, roller/cutter, esquina y pase extra',
-       'Rodar y sellar en el poste bajo','Salir a poner otra pantalla'],
-    a:1,
-    why:'El Short Roll recibe detrás de una defensa agresiva y juega una ventaja 4x3. Por eso el receptor tiene que leer, no sólo tirar.' }
-];
-
-var SETS = {
-  all:  { name:'Todo', pick:function(){ return BANK.slice(); } },
-  def:  { name:'Defensa del Pick & Roll', pick:function(){ return BANK.filter(function(q){ return q.side === 'DEF'; }); } },
-  off:  { name:'Conceptos ofensivos', pick:function(){ return BANK.filter(function(q){ return q.side === 'OFF'; }); } },
-  quick:{ name:'Rápido · 8 preguntas', pick:function(){ return shuffle(BANK.slice()).slice(0, 8); } }
-};
-
-function shuffle(a){
-  for (var i = a.length - 1; i > 0; i--){
-    var j = Math.floor(Math.random() * (i + 1));
-    var t = a[i]; a[i] = a[j]; a[j] = t;
-  }
-  return a;
-}
-
+var id = new URLSearchParams(location.search).get('l');
+var l = lessonById(id);
 var app = document.getElementById('app');
-var quiz = [], at = 0, right = 0, wrong = [];
 
-function start(){
-  document.getElementById('count').textContent = '';
-  document.getElementById('bar').style.width = '0';
+if (!l){
+  app.innerHTML = '<h1>No encontramos esa lección.</h1>' +
+    '<a class="btn" href="index.html">← Volver</a>';
+} else {
+  var html =
+    '<div class="kick">' + (l.side === 'DEF' ? 'Defensa del Pick &amp; Roll' : 'Ataque') + '</div>' +
+    '<h1>' + l.name + '</h1>' +
+    (l.sub ? '<p class="lede">' + l.sub + (l.blurb ? ' — ' + l.blurb : '') + '</p>' : '');
 
-  app.innerHTML =
-    '<h1>Conceptos del Pick &amp; Roll</h1>' +
-    '<p class="lede">Las mismas preguntas que usamos en práctica. Escoge una respuesta y ' +
-      'te explico por qué, con el lenguaje del equipo.</p>' +
-    '<div class="pick">' +
-      Object.keys(SETS).map(function(k){
-        var n = SETS[k].pick().length;
-        return '<button onclick="begin(\'' + k + '\')">' +
-                 '<b>' + SETS[k].name + '</b>' +
-                 '<span>' + n + ' preguntas</span>' +
-               '</button>';
-      }).join('') +
-    '</div>';
-}
-
-function begin(key){
-  quiz = shuffle(SETS[key].pick());
-  at = 0; right = 0; wrong = [];
-  ask();
-}
-
-function ask(){
-  if (at >= quiz.length) return finish();
-
-  var q = quiz[at];
-  document.getElementById('count').textContent = (at + 1) + ' / ' + quiz.length;
-  document.getElementById('bar').style.width = (at / quiz.length * 100) + '%';
-
-  // the options are shuffled too, so nobody learns the position of the
-  // right answer instead of the concept
-  var order = shuffle(q.o.map(function(text, i){ return { text: text, correct: i === q.a }; }));
-  q._order = order;
-
-  app.innerHTML =
-    '<div class="tagrow">' +
-      '<span class="tag' + (q.side === 'OFF' ? ' off' : '') + '">' + q.tag + '</span>' +
-    '</div>' +
-    '<p class="q">' + q.q + '</p>' +
-    '<div class="opts" id="opts">' +
-      order.map(function(o, i){
-        return '<button class="opt" onclick="answer(' + i + ')">' +
-                 '<span class="k">' + 'ABCD'[i] + '</span>' +
-                 '<span>' + o.text + '</span>' +
-               '</button>';
-      }).join('') +
-    '</div>' +
-    '<div id="after"></div>';
-
-  document.querySelector('main').scrollTop = 0;
-}
-
-function answer(i){
-  var q = quiz[at];
-  var picked = q._order[i];
-  var buttons = document.querySelectorAll('#opts .opt');
-
-  for (var b = 0; b < buttons.length; b++){
-    buttons[b].disabled = true;
-    if (q._order[b].correct) buttons[b].className = 'opt right';
-  }
-  if (!picked.correct){
-    buttons[i].className = 'opt wrong';
-    wrong.push(q);
-  } else {
-    right++;
+  if (l.chain){
+    html += '<div class="chain">' +
+      l.chain.map(function(c, i){
+        return (i ? '<em>→</em>' : '') + '<i>' + c + '</i>';
+      }).join('') + '</div>';
   }
 
-  document.getElementById('after').innerHTML =
-    '<div class="why">' +
-      '<b>' + (picked.correct ? '✓ Correcto' : '✗ No es esa') + '</b>' +
-      '<p>' + q.why + '</p>' +
-    '</div>' +
-    '<button class="next" onclick="nextQ()">' +
-      (at + 1 >= quiz.length ? 'Ver resultado' : 'Siguiente') +
-    '</button>';
-}
+  if (l.points){
+    html += '<table><tr><th>Quién</th><th>Qué hace</th></tr>' +
+      l.points.map(function(p){
+        return '<tr><td style="width:34%"><b>' + p[0] + '</b></td><td>' + p[1] + '</td></tr>';
+      }).join('') + '</table>';
+  }
 
-function nextQ(){ at++; ask(); }
+  if (l.key){
+    html += '<div class="key"><b>Idea clave</b><p>' + l.key + '</p></div>';
+  }
+
+  if (l.attack){
+    html += '<h2>' + (l.side === 'DEF' ? 'Cómo se ataca esta cobertura' : 'En la cancha') + '</h2>' +
+      '<ul class="points">' + l.attack.map(function(a){ return '<li>' + a + '</li>'; }).join('') + '</ul>';
+  }
+
+  if (l.progression){
+    html += '<h2>Progresión en práctica</h2><ul class="points">' +
+      l.progression.map(function(s){ return '<li>' + s + '</li>'; }).join('') + '</ul>';
+  }
+
+  if (l.dict){
+    html += '<table><tr><th>Concepto</th><th>Qué es</th><th>Para qué</th></tr>' +
+      l.dict.map(function(d){
+        return '<tr><td><b>' + d[0] + '</b></td><td>' + d[1] + '</td><td class="mute">' + d[2] + '</td></tr>';
+      }).join('') + '</table>';
+  }
+
+  // what comes next, so a player moves through rather than stopping
+  var same = LESSONS.filter(function(x){ return x.side === l.side; });
+  var at = same.indexOf(l);
+  var nxt = same[at + 1];
+
+  html += '<button class="btn" onclick="finish()" id="doneBtn">Lo estudié</button>' +
+          (nxt ? '<a class="btn line" href="leccion.html?l=' + nxt.id + '">Siguiente: ' + nxt.name + '</a>' : '') +
+          '<a class="btn line" href="index.html">← Todas las lecciones</a>' +
+          '<p class="msg" id="msg"></p>';
+
+  app.innerHTML = html;
+}
 
 function finish(){
-  document.getElementById('bar').style.width = '100%';
-  document.getElementById('count').textContent = 'Final';
-
-  var pct = Math.round(right / quiz.length * 100);
-  var verdict = pct === 100 ? 'Perfecto. Ese es el lenguaje del equipo.'
-              : pct >= 80  ? 'Muy bien. Repasa las que fallaste.'
-              : pct >= 60  ? 'Vas bien, pero hay conceptos que repasar.'
-              : 'Hay que volver al manual. Repasa y hazlo otra vez.';
-
-  app.innerHTML =
-    '<div class="final">' +
-      '<div class="big">' + right + '</div>' +
-      '<div class="of">de ' + quiz.length + ' · ' + pct + '%</div>' +
-      '<div class="verdict">' + verdict + '</div>' +
-    '</div>' +
-    (wrong.length
-      ? '<div class="review"><h3>Para repasar</h3>' +
-          wrong.map(function(q){
-            return '<div><span class="t">' + q.tag + '</span> — ' + q.q + '</div>';
-          }).join('') +
-        '</div>'
-      : '') +
-    '<button class="next" onclick="start()" style="margin-top:20px">Otra vez</button>';
-
-  document.querySelector('main').scrollTop = 0;
+  markSeen(id);
+  var b = document.getElementById('doneBtn');
+  b.textContent = '✓ Guardado';
+  b.disabled = true;
+  var p = me();
+  document.getElementById('msg').textContent = p
+    ? 'Queda guardado en tu progreso.'
+    : 'Guardado en este aparato. Entra con tu PIN para guardarlo de verdad.';
+  document.getElementById('msg').className = 'msg ok';
 }
-
-start();
 </script>
 </body>
 </html>
