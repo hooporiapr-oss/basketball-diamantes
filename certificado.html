@@ -75,7 +75,7 @@ var pct = (total > 0) ? Math.round(correct / total * 100) : 0;
 if (!p){
   app.innerHTML = '<h1>Entra primero</h1>' +
     '<p class="lede">El certificado lleva tu nombre, así que hay que saber quién eres.</p>' +
-    '<a class="btn" href="entrar.html?next=quiz.html">Entrar</a>';
+    '<a class="btn" href="index.html?next=quiz.html">Entrar</a>';
 } else if (!(total > 0) || pct < 80){
   app.innerHTML = '<h1>Todavía no</h1>' +
     '<p class="lede">El certificado se gana con 80% o más en un grupo de preguntas.</p>' +
@@ -99,7 +99,7 @@ if (!p){
     '<div class="noprint">' +
       '<button class="btn" onclick="window.print()">Imprimir o guardar en PDF</button>' +
       '<a class="btn line" href="quiz.html">Otro grupo de preguntas</a>' +
-      '<a class="btn line" href="index.html">← Academia</a>' +
+      '<a class="btn line" href="academia.html">← Academia</a>' +
     '</div>';
 }
 
