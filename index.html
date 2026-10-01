@@ -32,7 +32,16 @@ main .wrap{padding-top:clamp(14px,3vw,22px)}
 <script>
 chrome({ title:'Entrar' });
 
-var next = new URLSearchParams(location.search).get('next') || 'index.html';
+// Already signed in on this device? Go straight to the academy.
+(function(){
+  var p = me();
+  if (p){
+    var n = new URLSearchParams(location.search).get('next');
+    location.replace(n || 'academia.html');
+  }
+})();
+
+var next = new URLSearchParams(location.search).get('next') || 'academia.html';
 var app = document.getElementById('app');
 var mode = null;   // null = escoger, 'new' = registrarse, 'back' = entrar
 
