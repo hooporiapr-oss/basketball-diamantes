@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Entrar · Diamantes de Arecibo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<header><div class="wrap bar"></div></header>
+
+<main>
+  <div class="wrap" id="app"></div>
+</main>
+
+<footer>
+  <b>Diamantes de Arecibo</b>
+  Conceptos de Rouldan A. Vélez
+</footer>
+
+<script src="dia.js"></script>
+<script>
+chrome({ title:'Entrar' });
+
+var next = new URLSearchParams(location.search).get('next') || 'index.html';
+var app = document.getElementById('app');
+var mode = null;   // null = escoger, 'new' = registrarse, 'back' = entrar
+
+function draw(){
+  if (mode === null){
+    app.innerHTML =
+      '<h1>¿Primera vez?</h1>' +
+      '<p class="lede">Entra una vez y el aparato te recuerda. Tu progreso queda guardado ' +
+        'aunque cambies de teléfono, siempre que uses tu PIN.</p>' +
+      '<button class="btn" onclick="go(\'new\')">Sí — registrarme</button>' +
+      '<button class="btn line" onclick="go(\'back\')">No — ya tengo PIN</button>';
+    return;
+  }
+
+  if (mode === 'back'){
+    app.innerHTML =
+      '<h1>Bienvenido de vuelta</h1>' +
+      '<label for="pin">Tu PIN</label>' +
+      '<input id="pin" class="pin" type="tel" inputmode="numeric" maxlength="4" placeholder="····">' +
+      '<div id="nameWrap" style="display:none">' +
+        '<label for="name2">Tu nombre</label>' +
+        '<input id="name2" type="text" maxlength="40" placeholder="Nombre y apellido">' +
+      '</div>' +
+      '<button class="btn" onclick="signIn()">Entrar</button>' +
+      '<p class="msg" id="msg"></p>' +
+      '<button class="btn line" onclick="go(null)">← Atrás</button>';
+    return;
+  }
+
+  app.innerHTML =
+    '<h1>Registrarte</h1>' +
+    '<label for="name">Tu nombre</label>' +
+    '<input id="name" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="name">' +
+    '<label for="team">Tu equipo o categoría</label>' +
+    '<input id="team" type="text" maxlength="30" placeholder="U14, Varsity, etc.">' +
+    '<label for="pin">Escoge un PIN de 4 números</label>' +
+    '<input id="pin" class="pin" type="tel" inputmode="numeric" maxlength="4" placeholder="····">' +
+    '<p class="mute" style="font-size:.84rem;margin-top:6px">Escoge números que recuerdes. ' +
+      'Es lo que usas para entrar desde otro aparato.</p>' +
+    '<button class="btn" onclick="join()">Empezar</button>' +
+    '<p class="msg" id="msg"></p>' +
+    '<button class="btn line" onclick="go(null)">← Atrás</button>';
+}
+
+function go(m){ mode = m; draw(); }
+
+function say(text, cls){
+  var el = document.getElementById('msg');
+  if (el){ el.textContent = text; el.className = 'msg ' + (cls || ''); }
+}
+
+function join(){
+  var name = document.getElementById('name').value.trim();
+  var team = document.getElementById('team').value.trim();
+  var pin  = document.getElementById('pin').value.trim();
+
+  if (name.length < 2) return say('Escribe tu nombre.', 'bad');
+  if (!/^\d{4}$/.test(pin)) return say('El PIN son 4 números.', 'bad');
+
+  say('Un momento…');
+  rpc('dia_join', { p_name: name, p_team: team, p_pin: pin })
+    .then(function(r){
+      if (!r || !r.ok){
+        if (r && r.reason === 'exists') return say('Ese nombre ya está registrado. Entra con tu PIN.', 'bad');
+        return say('No se pudo registrar. Intenta otra vez.', 'bad');
+      }
+      setMe({ id: r.id, name: r.name });
+      location.href = next;
+    })
+    .catch(function(e){ console.error(e); say('No se pudo registrar. Intenta otra vez.', 'bad'); });
+}
+
+function signIn(){
+  var pin = document.getElementById('pin').value.trim();
+  var nameEl = document.getElementById('name2');
+  var name = nameEl ? nameEl.value.trim() : '';
+
+  if (!/^\d{4}$/.test(pin)) return say('El PIN son 4 números.', 'bad');
+
+  say('Un momento…');
+  rpc('dia_sign_in', { p_pin: pin, p_name: name || null })
+    .then(function(r){
+      if (!r || !r.ok){
+        // more than one player chose the same PIN, which is normal
+        if (r && r.reason === 'name'){
+          document.getElementById('nameWrap').style.display = 'block';
+          return say('Más de uno usa ese PIN. ¿Cuál es tu nombre?', 'bad');
+        }
+        return say('No encontramos ese PIN.', 'bad');
+      }
+      setMe({ id: r.id, name: r.name });
+      location.href = next;
+    })
+    .catch(function(e){ console.error(e); say('No se pudo entrar. Intenta otra vez.', 'bad'); });
+}
+
+draw();
+</script>
+</body>
+</html>
