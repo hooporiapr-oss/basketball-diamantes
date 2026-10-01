@@ -341,6 +341,10 @@ function start(){
 
 var CURRENT_SET = 'all';
 
+// Ochenta por ciento aprueba. Lo bastante alto para significar algo, y
+// alcanzable para quien estudió el manual.
+var PASS_MARK = 80;
+
 function begin(key){
   CURRENT_SET = key;
   quiz = shuffle(SETS[key].pick());
@@ -412,9 +416,11 @@ function finish(){
   document.getElementById('count').textContent = 'Final';
 
   var pct = Math.round(right / quiz.length * 100);
+  var passed = pct >= PASS_MARK;
+
   var verdict = pct === 100 ? 'Perfecto. Ese es el lenguaje del equipo.'
-              : pct >= 80  ? 'Muy bien. Repasa las que fallaste.'
-              : pct >= 60  ? 'Vas bien, pero hay conceptos que repasar.'
+              : passed      ? 'Aprobado. Dominas este grupo.'
+              : pct >= 60   ? 'Casi. Repasa y vuelve a intentarlo.'
               : 'Hay que volver al manual. Repasa y hazlo otra vez.';
 
   app.innerHTML =
@@ -423,6 +429,13 @@ function finish(){
       '<div class="of">de ' + quiz.length + ' · ' + pct + '%</div>' +
       '<div class="verdict">' + verdict + '</div>' +
     '</div>' +
+    (passed
+      ? (me()
+          ? '<a class="btn" href="certificado.html?s=' + encodeURIComponent(CURRENT_SET) +
+              '&c=' + right + '&t=' + quiz.length + '">Ver mi certificado</a>'
+          : '<p class="mute" style="text-align:center">Aprobaste. ' +
+            '<a href="entrar.html?next=quiz.html">Entra</a> para quedarte con el certificado.</p>')
+      : '') +
     (wrong.length
       ? '<div class="review"><h3>Para repasar</h3>' +
           wrong.map(function(q){
