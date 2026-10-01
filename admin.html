@@ -66,16 +66,19 @@ function lock(){
   el.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
 }
 
+var ROLE = { admin:false, coach:false };
+
 function unlock(){
   var c = (document.getElementById('c').value || '').trim();
   if (!c) return say('Escribe el código.', 'bad');
 
   say('Un momento…');
-  // dia_set_code with the same code both checks it and leaves it be
-  rpc('dia_set_code', { p_code: c, p_new: c })
+  rpc('dia_who', { p_code: c })
     .then(function(r){
-      if (!r || !r.ok) return say('Código incorrecto.', 'bad');
+      if (!r || (!r.admin && !r.coach)) return say('Código incorrecto.', 'bad');
+      ROLE = { admin: !!r.admin, coach: !!r.coach };
       keep(c);
+      try { sessionStorage.setItem('dia-role', JSON.stringify(ROLE)); } catch(e){}
       load();
     })
     .catch(function(e){ console.error(e); say('No se pudo verificar.', 'bad'); });
@@ -105,7 +108,8 @@ function load(){
     app.innerHTML =
       '<h1>Administración</h1>' +
       '<p class="lede">' + players.length + ' jugador' + (players.length === 1 ? '' : 'es') +
-        ' registrado' + (players.length === 1 ? '' : 's') + '.</p>' +
+        ' registrado' + (players.length === 1 ? '' : 's') + '. ' +
+        (ROLE.admin ? 'Entraste como admin.' : 'Entraste como coach.') + '</p>' +
 
       '<button class="btn" onclick="addPlayer()">+ Añadir jugador</button>' +
 
@@ -127,13 +131,22 @@ function load(){
           '</table>'
         : '<p class="mute">Todavía no hay nadie.</p>') +
 
-      '<div class="panel">' +
-        '<h3>Cambiar el código</h3>' +
-        '<p>El que usas para entrar aquí y para borrar jugadores.</p>' +
-        '<label for="n1">Código nuevo</label>' +
-        '<input id="n1" type="password" placeholder="mínimo 4 caracteres">' +
-        '<button class="btn line" onclick="changeCode()">Cambiar</button>' +
-      '</div>' +
+      (ROLE.admin
+        ? '<div class="panel">' +
+            '<h3>Código del coach</h3>' +
+            '<p>El que usa el coach para entrar aquí. Sólo tú puedes cambiarlo.</p>' +
+            '<label for="n1">Código nuevo del coach</label>' +
+            '<input id="n1" type="password" placeholder="mínimo 4 caracteres">' +
+            '<button class="btn line" onclick="changeCode()">Cambiar el del coach</button>' +
+          '</div>' +
+          '<div class="panel">' +
+            '<h3>Tu código de admin</h3>' +
+            '<p>El tuyo. Apúntalo: no se puede recuperar.</p>' +
+            '<label for="n2">Código nuevo de admin</label>' +
+            '<input id="n2" type="password" placeholder="mínimo 6 caracteres">' +
+            '<button class="btn line" onclick="changeAdmin()">Cambiar el mío</button>' +
+          '</div>'
+        : '') +
 
       '<p class="msg" id="msg"></p>' +
       '<button class="btn line" onclick="out()">Cerrar sesión de admin</button>' +
@@ -191,21 +204,41 @@ function resetPin(id, name){
 
 function changeCode(){
   var nuevo = (document.getElementById('n1').value || '').trim();
-  if (nuevo.length < 4) return say('El código nuevo necesita al menos 4 caracteres.', 'bad');
+  if (nuevo.length < 4) return say('El código del coach necesita al menos 4 caracteres.', 'bad');
 
   rpc('dia_set_code', { p_code: code(), p_new: nuevo })
     .then(function(r){
       if (!r || !r.ok){
         return say(r && r.reason === 'short' ? 'Demasiado corto.' : 'No se pudo cambiar.', 'bad');
       }
-      keep(nuevo);
       document.getElementById('n1').value = '';
-      say('Código cambiado. Apúntalo — no se puede recuperar.', 'ok');
+      say('Código del coach cambiado. Díselo.', 'ok');
     })
     .catch(function(e){ console.error(e); say('No se pudo cambiar.', 'bad'); });
 }
 
-function out(){ forget(); lock(); }
+function changeAdmin(){
+  var nuevo = (document.getElementById('n2').value || '').trim();
+  if (nuevo.length < 6) return say('Tu código necesita al menos 6 caracteres.', 'bad');
+
+  rpc('dia_set_admin', { p_code: code(), p_new: nuevo })
+    .then(function(r){
+      if (!r || !r.ok){
+        return say(r && r.reason === 'short' ? 'Demasiado corto.' : 'No se pudo cambiar.', 'bad');
+      }
+      keep(nuevo);                       // sigues dentro con el nuevo
+      document.getElementById('n2').value = '';
+      say('Tu código cambió. Apúntalo — no se puede recuperar.', 'ok');
+    })
+    .catch(function(e){ console.error(e); say('No se pudo cambiar.', 'bad'); });
+}
+
+function out(){
+  forget();
+  try { sessionStorage.removeItem('dia-role'); } catch(e){}
+  ROLE = { admin:false, coach:false };
+  lock();
+}
 
 function q(s){ return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'") + "'"; }
 
@@ -216,7 +249,12 @@ function esc(s){
 }
 
 // vuelve directo si el código sigue en esta pestaña
-if (code()) load(); else lock();
+if (code()){
+  try { ROLE = JSON.parse(sessionStorage.getItem('dia-role') || 'null') || ROLE; } catch(e){}
+  load();
+} else {
+  lock();
+}
 </script>
 </body>
 </html>
