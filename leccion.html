@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lección · Diamantes de Arecibo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<header><div class="wrap bar"></div></header>
+
+<main>
+  <div class="wrap" id="app"></div>
+</main>
+
+<footer>
+  <b>Diamantes de Arecibo</b>
+  Conceptos de Rouldan A. Vélez
+</footer>
+
+<script src="dia.js"></script>
+<script src="lessons.js"></script>
+<script>
+chrome({ title:'Lección' });
+
+var id = new URLSearchParams(location.search).get('l');
+var l = lessonById(id);
+var app = document.getElementById('app');
+
+if (!l){
+  app.innerHTML = '<h1>No encontramos esa lección.</h1>' +
+    '<a class="btn" href="index.html">← Volver</a>';
+} else {
+  var html =
+    '<div class="kick">' + (l.side === 'DEF' ? 'Defensa del Pick &amp; Roll' : 'Ataque') + '</div>' +
+    '<h1>' + l.name + '</h1>' +
+    (l.sub ? '<p class="lede">' + l.sub + (l.blurb ? ' — ' + l.blurb : '') + '</p>' : '');
+
+  if (l.chain){
+    html += '<div class="chain">' +
+      l.chain.map(function(c, i){
+        return (i ? '<em>→</em>' : '') + '<i>' + c + '</i>';
+      }).join('') + '</div>';
+  }
+
+  if (l.points){
+    html += '<table><tr><th>Quién</th><th>Qué hace</th></tr>' +
+      l.points.map(function(p){
+        return '<tr><td style="width:34%"><b>' + p[0] + '</b></td><td>' + p[1] + '</td></tr>';
+      }).join('') + '</table>';
+  }
+
+  if (l.key){
+    html += '<div class="key"><b>Idea clave</b><p>' + l.key + '</p></div>';
+  }
+
+  if (l.attack){
+    html += '<h2>' + (l.side === 'DEF' ? 'Cómo se ataca esta cobertura' : 'En la cancha') + '</h2>' +
+      '<ul class="points">' + l.attack.map(function(a){ return '<li>' + a + '</li>'; }).join('') + '</ul>';
+  }
+
+  if (l.progression){
+    html += '<h2>Progresión en práctica</h2><ul class="points">' +
+      l.progression.map(function(s){ return '<li>' + s + '</li>'; }).join('') + '</ul>';
+  }
+
+  if (l.dict){
+    html += '<table><tr><th>Concepto</th><th>Qué es</th><th>Para qué</th></tr>' +
+      l.dict.map(function(d){
+        return '<tr><td><b>' + d[0] + '</b></td><td>' + d[1] + '</td><td class="mute">' + d[2] + '</td></tr>';
+      }).join('') + '</table>';
+  }
+
+  // what comes next, so a player moves through rather than stopping
+  var same = LESSONS.filter(function(x){ return x.side === l.side; });
+  var at = same.indexOf(l);
+  var nxt = same[at + 1];
+
+  html += '<button class="btn" onclick="finish()" id="doneBtn">Lo estudié</button>' +
+          (nxt ? '<a class="btn line" href="leccion.html?l=' + nxt.id + '">Siguiente: ' + nxt.name + '</a>' : '') +
+          '<a class="btn line" href="index.html">← Todas las lecciones</a>' +
+          '<p class="msg" id="msg"></p>';
+
+  app.innerHTML = html;
+}
+
+function finish(){
+  markSeen(id);
+  var b = document.getElementById('doneBtn');
+  b.textContent = '✓ Guardado';
+  b.disabled = true;
+  var p = me();
+  document.getElementById('msg').textContent = p
+    ? 'Queda guardado en tu progreso.'
+    : 'Guardado en este aparato. Entra con tu PIN para guardarlo de verdad.';
+  document.getElementById('msg').className = 'msg ok';
+}
+</script>
+</body>
+</html>
