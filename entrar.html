@@ -8,12 +8,18 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
+<style>
+/* El banner va pegado a la barra y ocupa todo el ancho. */
+.hero{display:block;width:100%;height:auto;margin:0 0 4px}
+main .wrap{padding-top:clamp(14px,3vw,22px)}
+</style>
 </head>
 <body>
 
 <header><div class="wrap bar"></div></header>
 
 <main>
+  <img class="hero" src="ready.jpg" alt="Are you ready?">
   <div class="wrap" id="app"></div>
 </main>
 
