@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Admin · Diamantes de Arecibo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.mini{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:3px;
+  padding:6px 10px;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
+.mini:hover{border-color:var(--ink)}
+.mini.bad{color:var(--bad);border-color:rgba(168,50,63,.35)}
+.mini.bad:hover{border-color:var(--bad)}
+.lock{max-width:420px}
+.panel{border:2px solid var(--line);border-radius:4px;padding:16px 18px;margin:14px 0}
+.panel h3{margin:0 0 4px}
+.panel p{font-size:.9rem;color:var(--mute)}
+</style>
+</head>
+<body>
+
+<header><div class="wrap bar"></div></header>
+
+<main>
+  <div class="wrap" id="app"><p class="mute">Cargando…</p></div>
+</main>
+
+<footer>
+  <b>Diamantes de Arecibo</b>
+  Administración
+</footer>
+
+<script src="dia.js"></script>
+<script>
+chrome({ title:'Admin' });
+
+// El código vive sólo en esta pestaña. Cerrar la pestaña lo olvida,
+// que es lo que queremos en una computadora compartida.
+function code(){ try { return sessionStorage.getItem('dia-coach') || ''; } catch(e){ return ''; } }
+function keep(c){ try { sessionStorage.setItem('dia-coach', c); } catch(e){} }
+function forget(){ try { sessionStorage.removeItem('dia-coach'); } catch(e){} }
+
+var app = document.getElementById('app');
+
+function say(text, cls){
+  var el = document.getElementById('msg');
+  if (el){ el.textContent = text; el.className = 'msg ' + (cls || ''); }
+}
+
+// ---------- la puerta ----------
+function lock(){
+  app.innerHTML =
+    '<div class="lock">' +
+      '<h1>Administración</h1>' +
+      '<p class="lede">Para añadir o quitar jugadores, cambiar PINs y cambiar el código.</p>' +
+      '<label for="c">Código del coach</label>' +
+      '<input id="c" type="password" placeholder="••••••••">' +
+      '<button class="btn" onclick="unlock()">Entrar</button>' +
+      '<p class="msg" id="msg"></p>' +
+    '</div>';
+  var el = document.getElementById('c');
+  el.focus();
+  el.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+}
+
+function unlock(){
+  var c = (document.getElementById('c').value || '').trim();
+  if (!c) return say('Escribe el código.', 'bad');
+
+  say('Un momento…');
+  // dia_set_code with the same code both checks it and leaves it be
+  rpc('dia_set_code', { p_code: c, p_new: c })
+    .then(function(r){
+      if (!r || !r.ok) return say('Código incorrecto.', 'bad');
+      keep(c);
+      load();
+    })
+    .catch(function(e){ console.error(e); say('No se pudo verificar.', 'bad'); });
+}
+
+// ---------- la página ----------
+function load(){
+  app.innerHTML = '<p class="mute">Cargando…</p>';
+
+  Promise.all([
+    api('dia_players?select=id,name,team,created_at&order=name.asc'),
+    api('dia_progress?select=player_id,lesson'),
+    api('dia_quiz?select=player_id,correct,total')
+  ])
+  .then(function(res){
+    var players = res[0] || [], progress = res[1] || [], quizzes = res[2] || [];
+
+    var lessons = {}, best = {};
+    progress.forEach(function(r){
+      (lessons[r.player_id] = lessons[r.player_id] || {})[r.lesson] = 1;
+    });
+    quizzes.forEach(function(q){
+      var pct = Math.round(q.correct / Math.max(1, q.total) * 100);
+      if (!best[q.player_id] || pct > best[q.player_id]) best[q.player_id] = pct;
+    });
+
+    app.innerHTML =
+      '<h1>Administración</h1>' +
+      '<p class="lede">' + players.length + ' jugador' + (players.length === 1 ? '' : 'es') +
+        ' registrado' + (players.length === 1 ? '' : 's') + '.</p>' +
+
+      '<button class="btn" onclick="addPlayer()">+ Añadir jugador</button>' +
+
+      (players.length
+        ? '<table><tr><th>Jugador</th><th>Equipo</th><th>Lecc.</th><th>Nota</th><th></th></tr>' +
+            players.map(function(p){
+              var n = Object.keys(lessons[p.id] || {}).length;
+              return '<tr>' +
+                '<td><b>' + esc(p.name) + '</b></td>' +
+                '<td class="mute">' + esc(p.team || '—') + '</td>' +
+                '<td>' + n + '</td>' +
+                '<td>' + (best[p.id] === undefined ? '<span class="mute">—</span>' : best[p.id] + '%') + '</td>' +
+                '<td style="white-space:nowrap">' +
+                  '<button class="mini" onclick="resetPin(\'' + p.id + '\',' + q(p.name) + ')">PIN</button> ' +
+                  '<button class="mini bad" onclick="removePlayer(\'' + p.id + '\',' + q(p.name) + ')">Borrar</button>' +
+                '</td>' +
+              '</tr>';
+            }).join('') +
+          '</table>'
+        : '<p class="mute">Todavía no hay nadie.</p>') +
+
+      '<div class="panel">' +
+        '<h3>Cambiar el código</h3>' +
+        '<p>El que usas para entrar aquí y para borrar jugadores.</p>' +
+        '<label for="n1">Código nuevo</label>' +
+        '<input id="n1" type="password" placeholder="mínimo 4 caracteres">' +
+        '<button class="btn line" onclick="changeCode()">Cambiar</button>' +
+      '</div>' +
+
+      '<p class="msg" id="msg"></p>' +
+      '<button class="btn line" onclick="out()">Cerrar sesión de admin</button>' +
+      '<a class="btn line" href="coach.html">Ver el panel del coach</a>';
+  })
+  .catch(function(e){
+    console.error(e);
+    app.innerHTML = '<p class="mute">No se pudieron cargar los datos.</p>';
+  });
+}
+
+function call(fn, args){
+  args.p_code = code();
+  return rpc(fn, args).then(function(r){
+    if (r && r.ok === false && r.reason === 'code'){
+      forget();
+      lock();
+      say('El código cambió. Entra otra vez.', 'bad');
+      return null;
+    }
+    return r;
+  });
+}
+
+function addPlayer(){
+  var name = prompt('Nombre del jugador:');
+  if (!name) return;
+  var team = prompt('Equipo o categoría (opcional):') || '';
+  var pin  = prompt('PIN de 4 números (opcional):') || '';
+
+  call('dia_coach_add', { p_name: name, p_team: team, p_pin: pin })
+    .then(function(r){
+      if (!r) return;
+      if (!r.ok) return alert(r.reason === 'exists' ? 'Ese nombre ya existe.' : 'No se pudo añadir.');
+      load();
+    })
+    .catch(function(e){ console.error(e); alert('No se pudo añadir.'); });
+}
+
+function removePlayer(id, name){
+  if (!confirm('¿Borrar a ' + name + '? Se pierde su progreso y sus notas.')) return;
+  call('dia_coach_remove', { p_player: id })
+    .then(function(r){ if (r && r.ok) load(); })
+    .catch(function(e){ console.error(e); alert('No se pudo borrar.'); });
+}
+
+function resetPin(id, name){
+  var pin = prompt('PIN nuevo para ' + name + ' (4 números, o vacío para quitarlo):');
+  if (pin === null) return;
+  if (pin && !/^\d{4}$/.test(pin)) return alert('El PIN son 4 números.');
+  call('dia_coach_pin', { p_player: id, p_pin: pin })
+    .then(function(r){ if (r && r.ok) alert('PIN cambiado.'); })
+    .catch(function(e){ console.error(e); alert('No se pudo cambiar.'); });
+}
+
+function changeCode(){
+  var nuevo = (document.getElementById('n1').value || '').trim();
+  if (nuevo.length < 4) return say('El código nuevo necesita al menos 4 caracteres.', 'bad');
+
+  rpc('dia_set_code', { p_code: code(), p_new: nuevo })
+    .then(function(r){
+      if (!r || !r.ok){
+        return say(r && r.reason === 'short' ? 'Demasiado corto.' : 'No se pudo cambiar.', 'bad');
+      }
+      keep(nuevo);
+      document.getElementById('n1').value = '';
+      say('Código cambiado. Apúntalo — no se puede recuperar.', 'ok');
+    })
+    .catch(function(e){ console.error(e); say('No se pudo cambiar.', 'bad'); });
+}
+
+function out(){ forget(); lock(); }
+
+function q(s){ return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'") + "'"; }
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(m){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m];
+  });
+}
+
+// vuelve directo si el código sigue en esta pestaña
+if (code()) load(); else lock();
+</script>
+</body>
+</html>
