@@ -28,6 +28,7 @@
       se marcan cuando las completa, y el certificado se gana con 80% o más en un grupo
       de preguntas.</p>
     <div id="out"><p class="mute">Cargando…</p></div>
+    <a class="btn line" href="admin.html" style="margin-top:18px">Administración</a>
   </div>
 </main>
 
@@ -52,6 +53,8 @@ function setCoachCode(c){
 function askCode(){
   var c = prompt('Código del coach:');
   if (c === null) return null;
+  c = c.trim();            // a space pasted on the end should not fail
+  if (!c) return null;
   setCoachCode(c);
   return c;
 }
