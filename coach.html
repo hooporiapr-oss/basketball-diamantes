@@ -17,8 +17,9 @@
   <div class="wrap">
     <div class="kick">Para el coach</div>
     <h1>Quién ha estudiado qué.</h1>
-    <p class="lede">Se actualiza solo. Cada jugador aparece cuando se registra, y las lecciones
-      se marcan cuando las completa.</p>
+    <p class="lede">Se actualiza solo. Cada jugador aparece cuando se registra, las lecciones
+      se marcan cuando las completa, y el certificado se gana con 80% o más en un grupo
+      de preguntas.</p>
     <div id="out"><p class="mute">Cargando…</p></div>
   </div>
 </main>
@@ -55,21 +56,33 @@ Promise.all([
   });
 
   // the best score each player has posted, which is what a coach asks
-  var bestBy = {};
+  var bestBy = {}, passedBy = {};
   quizzes.forEach(function(q){
     var pct = Math.round(q.correct / Math.max(1, q.total) * 100);
     if (!bestBy[q.player_id] || pct > bestBy[q.player_id]) bestBy[q.player_id] = pct;
+    // 80% earns the certificate for that group
+    if (pct >= 80){
+      (passedBy[q.player_id] = passedBy[q.player_id] || {})[q.set_key] = 1;
+    }
   });
+
+  var SET_SHORT = { def:'Defensa', off:'Ataque', all:'Completo', quick:'Rápido' };
 
   var total = LESSONS.length;
 
   var rows = players.map(function(p){
     var done = Object.keys(doneBy[p.id] || {}).length;
     var best = bestBy[p.id];
+    var certs = Object.keys(passedBy[p.id] || {})
+      .map(function(k){ return SET_SHORT[k] || k; });
+
     return '<tr>' +
       '<td><b>' + esc(p.name) + '</b>' + (p.team ? '<br><span class="mute" style="font-size:.84rem">' + esc(p.team) + '</span>' : '') + '</td>' +
       '<td>' + done + ' / ' + total + '</td>' +
       '<td>' + (best === undefined ? '<span class="mute">—</span>' : best + '%') + '</td>' +
+      '<td>' + (certs.length
+                 ? '<span style="color:var(--good);font-weight:800">' + certs.join(' · ') + '</span>'
+                 : '<span class="mute">—</span>') + '</td>' +
     '</tr>';
   }).join('');
 
@@ -80,7 +93,7 @@ Promise.all([
   }).sort(function(a, b){ return a.n - b.n; });
 
   out.innerHTML =
-    '<table><tr><th>Jugador</th><th>Lecciones</th><th>Mejor nota</th></tr>' + rows + '</table>' +
+    '<table><tr><th>Jugador</th><th>Lecciones</th><th>Mejor nota</th><th>Certificados</th></tr>' + rows + '</table>' +
 
     '<h2>Por lección</h2>' +
     '<table><tr><th>Lección</th><th>Lo estudiaron</th></tr>' +
