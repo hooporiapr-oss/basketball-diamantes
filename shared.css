@@ -1,0 +1,91 @@
+/* ══════════════════════════════════════════════════════
+   Diamantes de Arecibo — shared look.
+   Navy and gold from the team badge. One stylesheet so a
+   lesson, the quiz and the coach panel are the same place.
+   ══════════════════════════════════════════════════════ */
+:root{
+  --ink:#0B1B33; --mute:#6B7C91; --line:#D3DEEA; --tint:#F4F8FC;
+  --blue:#1D4FA3; --gold:#C5A54A; --good:#0B7A5A; --bad:#A8323F;
+}
+*{box-sizing:border-box}
+html{background:#0B1B33}
+body{
+  margin:0;height:100dvh;overflow:hidden;display:flex;flex-direction:column;
+  font-family:Archivo,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color:var(--ink);background:#fff;line-height:1.55;-webkit-text-size-adjust:100%;
+}
+.wrap{width:min(760px,93vw);margin:0 auto}
+
+/* ---- bar ---- */
+header{flex:0 0 auto;background:#0B1B33;border-bottom:3px solid var(--gold);
+  padding-top:env(safe-area-inset-top,0px)}
+header .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0}
+.mark{display:block;font-weight:900;font-size:1rem;color:#fff;line-height:1.15;text-decoration:none}
+.mark span{display:block;font-size:.58rem;font-weight:800;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold)}
+.who{font-size:.72rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+  color:#9FB3C4;text-align:right}
+.who a{color:#9FB3C4;text-decoration:none;border-bottom:1px solid #33465A}
+
+main{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden}
+main .wrap{padding:clamp(18px,4vw,30px) 0 28px}
+
+footer{flex:0 0 auto;background:#0B1B33;color:#9FB3C4;border-top:1px solid #13294d;
+  padding:13px 0 calc(13px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.79rem}
+footer b{color:#fff;display:block;font-weight:800}
+
+/* ---- type ---- */
+h1{font-size:clamp(1.5rem,4.6vw,2.1rem);line-height:1.1;letter-spacing:-.03em;margin:0 0 8px;font-weight:900}
+h2{font-size:clamp(1.1rem,3vw,1.4rem);letter-spacing:-.025em;margin:26px 0 8px;font-weight:900}
+h3{font-size:1rem;margin:18px 0 6px;font-weight:900}
+p{margin:0 0 12px}
+.lede{color:var(--mute);margin:0 0 20px;max-width:58ch}
+.mute{color:var(--mute)}
+
+/* ---- blocks ---- */
+.kick{font-size:.62rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px}
+.card{display:block;padding:15px 16px;border:2px solid var(--ink);border-radius:4px;
+  background:#fff;text-decoration:none;color:var(--ink);margin-bottom:10px;cursor:pointer;
+  font:inherit;width:100%;text-align:left}
+.card:hover{background:var(--tint)}
+.card b{display:block;font-size:1.04rem}
+.card span{display:block;color:var(--mute);font-size:.89rem;margin-top:2px}
+.card .done{color:var(--good);font-weight:800}
+
+.grid{display:grid;gap:10px}
+@media(min-width:620px){.grid.two{grid-template-columns:1fr 1fr}}
+
+ul.points{margin:0 0 14px;padding-left:20px}
+ul.points li{margin-bottom:7px}
+
+.key{border-left:4px solid var(--gold);background:var(--tint);padding:13px 15px;margin:14px 0}
+.key b{display:block;margin-bottom:3px}
+.key p{margin:0;font-size:.95rem}
+
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.chain i{font-style:normal;background:var(--ink);color:#fff;border-radius:3px;
+  padding:6px 10px;font-size:.78rem;font-weight:800;letter-spacing:.03em}
+.chain em{font-style:normal;color:var(--mute);font-weight:900}
+
+table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:.93rem}
+th{text-align:left;padding:8px 10px 8px 0;border-bottom:2px solid var(--ink);font-size:.62rem;
+  font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+td{padding:9px 10px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td:last-child,th:last-child{padding-right:0}
+
+/* ---- controls ---- */
+label{display:block;font-size:.84rem;font-weight:700;margin:14px 0 5px}
+input,select{width:100%;padding:13px 14px;border:2px solid var(--ink);border-radius:4px;
+  background:#fff;color:var(--ink);font:inherit;font-size:1rem}
+input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,79,163,.15)}
+.pin{letter-spacing:.4em;text-align:center}
+.btn{display:block;width:100%;padding:15px;border:2px solid var(--ink);border-radius:4px;
+  background:var(--ink);color:#fff;font:inherit;font-weight:800;font-size:1rem;
+  cursor:pointer;text-align:center;text-decoration:none;margin-top:12px}
+.btn.line{background:#fff;color:var(--ink)}
+.btn:hover{background:#13294d}
+.btn.line:hover{background:var(--tint)}
+.msg{margin-top:10px;font-weight:700;font-size:.9rem;min-height:1.2em}
+.msg.bad{color:var(--bad)}
+.msg.ok{color:var(--good)}
